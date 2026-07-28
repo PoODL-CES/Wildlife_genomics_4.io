@@ -1,3 +1,777 @@
+/* ==================================================
+   WILDLIFE GENOMICS WORKSHOP
+   Theme: Savannah
+   Author: Akancha
+================================================== */
+
+/* ===========================
+   GOOGLE COLORS
+=========================== */
+
+:root{
+
+    --primary:#0B2545;
+    --secondary:#F4A261;
+    --accent:#E76F51;
+    --cream:#FFF9F2;
+    --text:#2F3A45;
+    --white:#ffffff;
+    --shadow:0 12px 30px rgba(0,0,0,.12);
+
+}
+
+/* ===========================
+RESET
+=========================== */
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:'Poppins',sans-serif;
+
+    background:var(--cream);
+
+    color:var(--text);
+
+    overflow-x:hidden;
+
+}
+
+img{
+
+    max-width:100%;
+
+}
+
+section{
+
+    padding:90px 8%;
+
+}
+
+h1,h2,h3{
+
+    font-weight:700;
+
+}
+
+p{
+
+    line-height:1.8;
+
+}
+
+/* ===========================
+NAVIGATION
+=========================== */
+
+.navbar{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:18px 8%;
+
+    z-index:999;
+
+    background:rgba(11,37,69,.55);
+
+    backdrop-filter:blur(14px);
+
+    transition:.4s;
+
+}
+
+.navbar.scrolled{
+
+    padding:12px 8%;
+
+    background:#0B2545;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.25);
+
+}
+
+.logo{
+
+    color:white;
+
+    font-size:28px;
+
+    font-weight:700;
+
+}
+
+.navbar ul{
+
+    list-style:none;
+
+    display:flex;
+
+    gap:35px;
+
+}
+
+.navbar a{
+
+    color:white;
+
+    text-decoration:none;
+
+    transition:.35s;
+
+    font-weight:500;
+
+    position:relative;
+
+}
+
+.navbar a::after{
+
+    content:"";
+
+    position:absolute;
+
+    left:0;
+
+    bottom:-5px;
+
+    width:0;
+
+    height:2px;
+
+    background:var(--secondary);
+
+    transition:.3s;
+
+}
+
+.navbar a:hover::after{
+
+    width:100%;
+
+}
+
+.navbar a:hover{
+
+    color:var(--secondary);
+
+}
+
+/* ===========================
+HERO
+=========================== */
+
+.hero{
+
+    position:relative;
+
+    height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    overflow:hidden;
+
+    background:
+
+    linear-gradient(rgba(8,25,48,.55),
+    rgba(8,25,48,.65)),
+
+    url("../images/hero.jpg");
+
+    background-size:cover;
+
+    background-position:center;
+
+}
+
+.hero::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(to bottom,
+    rgba(0,0,0,.15),
+    rgba(0,0,0,.45));
+
+}
+
+.hero-content{
+
+    position:relative;
+
+    z-index:5;
+
+    color:white;
+
+    max-width:900px;
+
+}
+
+.edition{
+
+    letter-spacing:5px;
+
+    font-size:18px;
+
+    color:#FFD166;
+
+    margin-bottom:20px;
+
+}
+
+.hero h1{
+
+    font-size:72px;
+
+    line-height:1.1;
+
+    margin-bottom:25px;
+
+    text-shadow:2px 3px 18px rgba(0,0,0,.45);
+
+}
+
+.subtitle{
+
+    font-size:24px;
+
+    margin-bottom:45px;
+
+}
+
+/* ===========================
+BUTTONS
+=========================== */
+
+.hero-buttons{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:25px;
+
+}
+
+.btn{
+
+    background:var(--secondary);
+
+    color:white;
+
+    padding:16px 42px;
+
+    border-radius:50px;
+
+    text-decoration:none;
+
+    transition:.35s;
+
+    font-weight:600;
+
+    box-shadow:var(--shadow);
+
+}
+
+.btn:hover{
+
+    background:var(--accent);
+
+    transform:translateY(-5px);
+
+}
+
+.btn-outline{
+
+    border:2px solid white;
+
+    color:white;
+
+    padding:16px 42px;
+
+    border-radius:50px;
+
+    text-decoration:none;
+
+    transition:.35s;
+
+}
+
+.btn-outline:hover{
+
+    background:white;
+
+    color:var(--primary);
+
+}
+
+/* ===========================
+SCROLL ICON
+=========================== */
+
+.scroll-down{
+
+    position:absolute;
+
+    bottom:25px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:white;
+
+    font-size:34px;
+
+    animation:bounce 2s infinite;
+
+}
+
+@keyframes bounce{
+
+0%,100%{
+
+transform:translate(-50%,0);
+
+}
+
+50%{
+
+transform:translate(-50%,12px);
+
+}
+
+}
+
+/* ===========================
+ABOUT
+=========================== */
+
+#about{
+
+    background:white;
+
+    border-radius:40px 40px 0 0;
+
+}
+
+.container{
+
+    max-width:1100px;
+
+    margin:auto;
+
+    text-align:center;
+
+}
+
+.container h2{
+
+    font-size:42px;
+
+    color:var(--primary);
+
+    margin-bottom:25px;
+
+}
+
+.container p{
+
+    font-size:18px;
+
+    color:#555;
+
+}
+
+/* ===========================
+STATISTICS
+=========================== */
+
+.stats{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+    gap:25px;
+
+    background:var(--primary);
+
+    color:white;
+
+}
+
+.stat-box{
+
+    text-align:center;
+
+    padding:40px;
+
+    transition:.35s;
+
+}
+
+.stat-box:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.stat-box h2{
+
+    color:var(--secondary);
+
+    font-size:55px;
+
+}
+
+.stat-box p{
+
+    margin-top:10px;
+
+    font-size:18px;
+
+}
+/* =====================================
+   SECTION TITLES
+===================================== */
+
+.section-title{
+
+    text-align:center;
+    margin-bottom:60px;
+
+}
+
+.section-title h2{
+
+    font-size:42px;
+    color:var(--primary);
+    margin-bottom:15px;
+
+}
+
+.section-title p{
+
+    color:#666;
+    max-width:700px;
+    margin:auto;
+
+}
+
+
+/* =====================================
+   WORKSHOP HIGHLIGHTS
+===================================== */
+
+#highlights{
+
+    background:linear-gradient(
+        180deg,
+        #fff9f2,
+        #ffffff
+    );
+
+}
+
+.cards{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(270px,1fr));
+
+    gap:35px;
+
+    margin-top:50px;
+
+}
+
+.card{
+
+    position:relative;
+
+    background:white;
+
+    padding:40px;
+
+    border-radius:25px;
+
+    overflow:hidden;
+
+    transition:.45s;
+
+    box-shadow:0 20px 35px rgba(0,0,0,.08);
+
+}
+
+.card::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+
+    height:6px;
+
+    background:linear-gradient(
+    90deg,
+    #F4A261,
+    #E76F51);
+
+}
+
+.card:hover{
+
+    transform:translateY(-12px);
+
+    box-shadow:0 25px 45px rgba(0,0,0,.18);
+
+}
+
+.card i{
+
+    font-size:58px;
+
+    color:#F4A261;
+
+    margin-bottom:25px;
+
+}
+
+.card h3{
+
+    color:#0B2545;
+
+    margin-bottom:18px;
+
+}
+
+.card p{
+
+    color:#666;
+
+    font-size:16px;
+
+}
+
+
+/* =====================================
+   TRAINING TRACKS
+===================================== */
+
+#tracks{
+
+    background:#0B2545;
+
+    color:white;
+
+}
+
+#tracks h2{
+
+    color:white;
+
+    text-align:center;
+
+    margin-bottom:50px;
+
+}
+
+.tracks{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(320px,1fr));
+
+    gap:35px;
+
+}
+
+.track{
+
+    background:rgba(255,255,255,.08);
+
+    backdrop-filter:blur(12px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    border-radius:25px;
+
+    padding:35px;
+
+    transition:.45s;
+
+}
+
+.track:hover{
+
+    transform:translateY(-12px);
+
+    background:rgba(255,255,255,.14);
+
+}
+
+.track h3{
+
+    color:#FFD166;
+
+    margin-bottom:18px;
+
+}
+
+.track p{
+
+    color:#EAEAEA;
+
+}
+
+
+/* =====================================
+   GENERAL IMAGE STYLE
+===================================== */
+
+img{
+
+    display:block;
+
+}
+
+
+/* =====================================
+   HOVER EFFECT
+===================================== */
+
+.card,
+.track{
+
+    cursor:pointer;
+
+}
+
+
+/* =====================================
+   SMOOTH FADE
+===================================== */
+
+.fade{
+
+    opacity:0;
+
+    transform:translateY(40px);
+
+    transition:1s;
+
+}
+
+.fade.show{
+
+    opacity:1;
+
+    transform:translateY(0);
+
+}
+
+
+/* =====================================
+   DIVIDER
+===================================== */
+
+.divider{
+
+    width:100px;
+
+    height:4px;
+
+    background:#F4A261;
+
+    margin:20px auto 40px auto;
+
+    border-radius:30px;
+
+}
+
+
+/* =====================================
+   BUTTON GLOW
+===================================== */
+
+.btn:hover{
+
+    box-shadow:
+    0 0 20px rgba(244,162,97,.5);
+
+}
+
+
+/* =====================================
+   SCROLLBAR
+===================================== */
+
+::-webkit-scrollbar{
+
+    width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#ECECEC;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#F4A261;
+
+    border-radius:20px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+    background:#E76F51;
+
+}
 /* ===========================
    GLOBAL STYLES
 =========================== */
