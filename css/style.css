@@ -1559,7 +1559,7 @@ COLLABORATORS
 
     transition:.35s;
 
-    filter:grayscale(100%);
+    filter:grayscale(0);
 
     opacity:.8;
 
