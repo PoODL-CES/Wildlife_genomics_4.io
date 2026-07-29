@@ -1559,9 +1559,11 @@ COLLABORATORS
 
     transition:.35s;
 
-    filter:grayscale(0);
+    filter:none !important;
 
-    opacity:.8;
+    -webkit-filter:none !important;
+
+    opacity:1 !important;
 
 }
 
@@ -1570,9 +1572,12 @@ COLLABORATORS
 
     transform:scale(1.12);
 
-    filter:grayscale(0);
+    filter:none !important;
+
+    -webkit-filter:none !important;
 
     opacity:1;
+
 
 }
 
