@@ -1549,13 +1549,40 @@ COLLABORATORS
 }
 
 
-.logo-track img{
+/* Each logo gets an equal-sized box */
 
-    height:90px;
+.logo-item{
+
+    width:180px;
+
+    height:120px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    margin:0 30px;
+
+    flex-shrink:0;
+
+}
+
+
+/* Scale the image inside the box */
+
+.logo-item img{
+
+    max-width:150px;
+
+    max-height:90px;
 
     width:auto;
 
-    margin:0 45px;
+    height:auto;
+
+    object-fit:contain;
 
     transition:.35s;
 
@@ -1568,37 +1595,11 @@ COLLABORATORS
 }
 
 
-.logo-track img:hover{
+.logo-item img:hover{
 
-    transform:scale(1.12);
-
-    filter:none !important;
-
-    -webkit-filter:none !important;
-
-    opacity:1;
-
+    transform:scale(1.10);
 
 }
-
-
-@keyframes scrollLogos{
-
-0%{
-
-transform:translateX(0);
-
-}
-
-100%{
-
-transform:translateX(-50%);
-
-}
-
-}
-
-
 /*=========================================================
 CONTACT / FOOTER
 ==========================================================*/
