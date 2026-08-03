@@ -1535,6 +1535,76 @@ VENUE
 }
 
 /*=========================================================
+APPLY
+==========================================================*/
+
+#apply{
+
+    background:#fdfbf7;
+
+    text-align:center;
+
+}
+
+.apply-box{
+
+    max-width:750px;
+
+    margin:50px auto;
+
+    background:white;
+
+    padding:45px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.apply-box h3{
+
+    color:var(--primary);
+
+    margin-bottom:20px;
+
+}
+
+.apply-box ul{
+
+    text-align:left;
+
+    display:inline-block;
+
+    margin:20px 0;
+
+}
+
+.apply-box li{
+
+    margin-bottom:10px;
+
+    font-size:17px;
+
+}
+
+.apply-box a{
+
+    color:#F4A261;
+
+    text-decoration:none;
+
+    font-weight:700;
+
+}
+
+.apply-box a:hover{
+
+    color:#E76F51;
+
+}
+
+/*=========================================================
     PART 4
     COLLABORATORS • FOOTER • ANIMATIONS
 ==========================================================*/
