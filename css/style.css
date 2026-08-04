@@ -1760,7 +1760,6 @@ COLLABORATORS
 
 }
 
-
 .logo-slider{
 
     position:relative;
@@ -1772,7 +1771,6 @@ COLLABORATORS
     padding:25px 0;
 
 }
-
 
 .logo-slider::before,
 .logo-slider::after{
@@ -1791,7 +1789,6 @@ COLLABORATORS
 
 }
 
-
 .logo-slider::before{
 
     left:0;
@@ -1800,7 +1797,6 @@ COLLABORATORS
 
 }
 
-
 .logo-slider::after{
 
     right:0;
@@ -1808,7 +1804,6 @@ COLLABORATORS
     background:linear-gradient(to left,#ffffff,transparent);
 
 }
-
 
 .logo-track{
 
@@ -1822,13 +1817,11 @@ COLLABORATORS
 
 }
 
-
 .logo-slider:hover .logo-track{
 
     animation-play-state:paused;
 
 }
-
 
 .logo-track img{
 
@@ -1848,6 +1841,15 @@ COLLABORATORS
 
 }
 
+/* Larger logos (IISc & PoODL) */
+
+.logo-track img.logo-large{
+
+    height:130px;
+
+    max-width:220px;
+
+}
 
 .logo-track img:hover{
 
@@ -1859,9 +1861,7 @@ COLLABORATORS
 
     opacity:1;
 
-
 }
-
 
 @keyframes scrollLogos{
 
