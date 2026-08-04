@@ -416,6 +416,95 @@ h1,h2,h3,h4{
 
 }
 
+/*============================
+MEGA MENU
+=============================*/
+
+.dropdown{
+
+    position:relative;
+
+}
+
+.mega-menu{
+
+    position:absolute;
+
+    top:100%;
+
+    left:0;
+
+    display:none;
+
+    min-width:720px;
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+    box-shadow:0 18px 40px rgba(0,0,0,.18);
+
+    padding:18px;
+
+}
+
+.dropdown:hover .mega-menu{
+
+    display:block;
+
+}
+
+.mega-row{
+
+    display:grid;
+
+    grid-template-columns:250px 120px 140px 120px;
+
+    align-items:center;
+
+    padding:14px 10px;
+
+    border-bottom:1px solid #eeeeee;
+
+}
+
+.mega-row:last-child{
+
+    border-bottom:none;
+
+}
+
+.topic{
+
+    font-weight:600;
+
+    color:#0B2545;
+
+}
+
+.mega-row a{
+
+    text-decoration:none;
+
+    color:#0B2545;
+
+    padding:8px 12px;
+
+    border-radius:8px;
+
+    text-align:center;
+
+    transition:.3s;
+
+}
+
+.mega-row a:hover{
+
+    background:#F4A261;
+
+    color:white;
+
+}
 
 /*============================
  BUTTONS
