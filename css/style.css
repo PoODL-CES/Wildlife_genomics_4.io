@@ -275,7 +275,7 @@ h1,h2,h3,h4{
 }
 
 /*============================
- DROPDOWN MENU
+DROPDOWN MENU
 =============================*/
 
 .dropdown{
@@ -294,35 +294,49 @@ h1,h2,h3,h4{
 
     left:0;
 
-    background:#0B2545;
-
     min-width:260px;
 
-    padding:10px 0;
+    background:#ffffff;
 
     border-radius:12px;
 
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+
     list-style:none;
 
-    box-shadow:0 12px 30px rgba(0,0,0,.25);
+    padding:8px 0;
+
+}
+
+.dropdown:hover .dropdown-menu{
+
+    display:block;
 
 }
 
 .dropdown-menu li{
 
-    display:block;
+    position:relative;
 
 }
 
 .dropdown-menu li a{
 
-    display:block;
+    display:flex;
 
-    padding:14px 22px;
+    justify-content:space-between;
 
-    color:white;
+    align-items:center;
+
+    padding:12px 18px;
+
+    color:#0B2545;
 
     text-decoration:none;
+
+    white-space:nowrap;
+
+    transition:.3s;
 
 }
 
@@ -333,10 +347,55 @@ h1,h2,h3,h4{
     color:white;
 
 }
+/*============================
+SUB MENU
+=============================*/
 
-.dropdown:hover .dropdown-menu{
+.submenu-content{
+
+    display:none;
+
+    position:absolute;
+
+    top:0;
+
+    left:100%;
+
+    min-width:190px;
+
+    background:white;
+
+    border-radius:12px;
+
+    box-shadow:0 12px 30px rgba(0,0,0,.18);
+
+    list-style:none;
+
+    padding:8px 0;
+
+}
+
+.submenu:hover .submenu-content{
 
     display:block;
+
+}
+
+.submenu-content a{
+
+    display:block;
+
+    padding:12px 18px;
+
+    color:#0B2545;
+
+}
+
+.submenu-content a:hover{
+
+    background:#F4A261;
+
+    color:white;
 
 }
 /*============================
@@ -416,95 +475,6 @@ h1,h2,h3,h4{
 
 }
 
-/*============================
-MEGA MENU
-=============================*/
-
-.dropdown{
-
-    position:relative;
-
-}
-
-.mega-menu{
-
-    position:absolute;
-
-    top:100%;
-
-    left:0;
-
-    display:none;
-
-    min-width:720px;
-
-    background:#ffffff;
-
-    border-radius:16px;
-
-    box-shadow:0 18px 40px rgba(0,0,0,.18);
-
-    padding:18px;
-
-}
-
-.dropdown:hover .mega-menu{
-
-    display:block;
-
-}
-
-.mega-row{
-
-    display:grid;
-
-    grid-template-columns:250px 120px 140px 120px;
-
-    align-items:center;
-
-    padding:14px 10px;
-
-    border-bottom:1px solid #eeeeee;
-
-}
-
-.mega-row:last-child{
-
-    border-bottom:none;
-
-}
-
-.topic{
-
-    font-weight:600;
-
-    color:#0B2545;
-
-}
-
-.mega-row a{
-
-    text-decoration:none;
-
-    color:#0B2545;
-
-    padding:8px 12px;
-
-    border-radius:8px;
-
-    text-align:center;
-
-    transition:.3s;
-
-}
-
-.mega-row a:hover{
-
-    background:#F4A261;
-
-    color:white;
-
-}
 
 /*============================
  BUTTONS
