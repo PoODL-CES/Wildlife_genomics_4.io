@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>FASTQ QC and Trimming Guide</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      line-height: 1.6;
+    }
+
+    h2, h3, h4 {
+      color: #2c3e50;
+    }
+
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-left: 3px solid #3498db;
+      overflow-x: auto;
+    }
+
+    code {
+      background-color: #f0f0f0;
+      padding: 2px 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>FASTQ Quality Control and Trimming Guide</h2>
+
+<h3>Introduction</h3>
+
+<p>
+The raw FASTQ reads sometimes contain adapter sequences and low-quality bases
+at the ends. These need to be removed before downstream analysis.
+</p>
+
+
+<h3>Step 1: Install Conda</h3>
+
+<p>Follow the instructions to install Miniconda on a Linux system:</p>
+
+<pre><code>mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh</code></pre>
+
+<p>Refresh the terminal:</p>
+
+<pre><code>source ~/miniconda3/bin/activate</code></pre>
+
+<p>Initialize conda in all available shells:</p>
+
+<pre><code>~/miniconda3/bin/conda init --all</code></pre>
+
+
+<h3>Step 2: Install and Use FastQC</h3>
+
+<p><strong>Install FastQC:</strong></p>
+
+<pre><code>conda create -n fastqc -c bioconda fastqc</code></pre>
+
+<p><strong>Activate the environment:</strong></p>
+
+<pre><code>conda activate fastqc</code></pre>
+
+<p><strong>Run FastQC on all FASTQ files:</strong></p>
+
+<pre><code>fastqc fastq_data/*.fastq.gz -o .</code></pre>
+
+<p><strong>Organize output files:</strong></p>
+
+<pre><code>mkdir zip_files html_files
+mv *.zip zip_files/
+mv *.html html_files/</code></pre>
+
+<p><strong>To visualize the HTML files:</strong></p>
+
+<pre><code>exit
+scp -r name@IP_address:/path/to/html_files ~/</code></pre>
+
+<p><strong>Deactivate FastQC environment:</strong></p>
+
+<pre><code>conda deactivate</code></pre>
+
+
+<h3>Step 3: Trim Reads with Trim Galore</h3>
+
+<p><strong>Install Trim Galore:</strong></p>
+
+<pre><code>conda create -n trim-galore -c bioconda trim-galore</code></pre>
+
+<p><strong>Activate the environment:</strong></p>
+
+<pre><code>conda activate trim-galore</code></pre>
+
+<p><strong>Trim paired-end reads with Illumina adapters:</strong></p>
+
+<pre><code>trim_galore --paired --illumina \
+fastq_data/SRR836370_1.fastq.gz \
+fastq_data/SRR836370_2.fastq.gz</code></pre>
+
+<p><strong>View trimming report:</strong></p>
+
+<pre><code>less SRR836370_1.fastq.gz_trimming_report.txt</code></pre>
+
+
+<h4>Bulk Trimming Options</h4>
+
+<p><strong>Option 1: List file names manually</strong></p>
+
+<pre><code>for file in \
+fastq_data/SRR836370_1.fastq.gz \
+fastq_data/SRR836361_1.fastq.gz \
+fastq_data/SRR11286181_1.fastq.gz
+do
+    paired_file=${file/_1.fastq.gz/_2.fastq.gz}
+    trim_galore --paired "$file" "$paired_file"
+done</code></pre>
+
+
+<p><strong>Option 2: Use wildcard to automatically detect file pairs</strong></p>
+
+<pre><code>for file in fastq_data/*_1.fastq.gz
+do
+    trim_galore --paired "$file" "${file/_1.fastq.gz/_2.fastq.gz}"
+done</code></pre>
+
+
+<p><strong>Output Files:</strong></p>
+
+<ul>
+  <li><code>*.fq.gz_trimming_report.txt</code> - Summary report.</li>
+  <li><code>*_val_1.fastq.gz</code> - Trimmed read 1.</li>
+  <li><code>*_val_2.fastq.gz</code> - Trimmed read 2.</li>
+</ul>
+
+
+<p><strong>Deactivate the Trim Galore environment:</strong></p>
+
+<pre><code>conda deactivate</code></pre>
+
+</body>
+</html>
+
