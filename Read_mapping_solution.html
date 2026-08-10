@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Read Mapping and Processing Workflow</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    code, pre {
+      background-color: #eee;
+      padding: 10px;
+      display: block;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border-left: 5px solid #ccc;
+    }
+
+    h2, h3, h4 {
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+
+  <h2>Task 1: Map Trimmed Reads Using BWA MEM</h2>
+
+  <p><strong>Install BWA</strong></p>
+
+  <pre><code>conda create -n bwa -c bioconda bwa
+conda activate bwa</code></pre>
+
+
+  <p><strong>Map Reads</strong></p>
+
+  <pre><code>bwa mem GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna \
+SRR836370_1.fastq.gz \
+SRR836370_2.fastq.gz \
+> SRR836370_aligned_reads.sam</code></pre>
+
+
+  <p><strong>Loop for All Samples</strong></p>
+
+  <pre><code>for file1 in *_1.fastq.gz; do
+  file2=${file1/_1.fastq.gz/_2.fastq.gz}
+  sample_name=$(basename "$file1" _1.fastq.gz)
+
+  bwa mem GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna \
+    "$file1" \
+    "$file2" \
+    > "${sample_name}_aligned_reads.sam"
+done</code></pre>
+
+
+  <p><strong>Deactivate BWA Environment</strong></p>
+
+  <pre><code>conda deactivate</code></pre>
+
+
+  <h2>Task 2: Convert SAM to BAM and Sort</h2>
+
+  <p><strong>Install and Activate Samtools</strong></p>
+
+  <pre><code>conda create -n samtools -c bioconda samtools
+conda activate samtools</code></pre>
+
+
+  <p><strong>Convert and Sort</strong></p>
+
+  <pre><code>samtools sort SRR836370_aligned_reads.sam \
+-o SRR836370_sorted.bam</code></pre>
+
+
+  <p><strong>Batch Conversion and Sorting</strong></p>
+
+  <pre><code>for file in *_aligned_reads.sam; do
+  sample_name=${file%_aligned_reads.sam}
+  samtools sort "$file" -o "${sample_name}_sorted.bam"
+done</code></pre>
+
+
+  <p><strong>Deactivate Samtools Environment</strong></p>
+
+  <pre><code>conda deactivate</code></pre>
+
+
+  <h2>Task 3: Mark Duplicates Using GATK4</h2>
+
+  <p><strong>Install and Activate GATK4</strong></p>
+
+  <pre><code>conda create -n gatk4 -c bioconda gatk4
+conda activate gatk4</code></pre>
+
+
+  <p><strong>Add Read Groups</strong></p>
+
+  <pre><code>for file in *_sorted.bam
+do
+  gatk AddOrReplaceReadGroups \
+    I="$file" \
+    O="${file/_sorted.bam/_sorted_RG.bam}" \
+    RGID="${file/_sorted.bam/}" \
+    RGPL=ILLUMINA \
+    RGPU="${file/_sorted.bam/}" \
+    RGSM="${file/_sorted.bam/}" \
+    RGLB="${file/_sorted.bam/}"
+done</code></pre>
+
+
+  <p><strong>Mark Duplicates</strong></p>
+
+  <pre><code>gatk MarkDuplicates \
+  -I SRR836370_sorted_RG.bam \
+  -O SRR836370_deduplicated.bam \
+  -M SRR836370_duplication_metrics.txt \
+  --REMOVE_DUPLICATES true</code></pre>
+
+
+  <p><strong>Loop Version</strong></p>
+
+  <pre><code>for file in *_sorted_RG.bam; do
+  base=${file%_sorted_RG.bam}
+
+  gatk MarkDuplicates \
+    -I "$file" \
+    -O "${base}_deduplicated.bam" \
+    -M "${base}_duplication_metrics.txt" \
+    --REMOVE_DUPLICATES true
+done</code></pre>
+
+
+  <h2>Task 4: Index Deduplicated Files</h2>
+
+  <p><strong>Index a single BAM file</strong></p>
+
+  <pre><code>samtools index SRR836370_deduplicated.bam</code></pre>
+
+
+  <p><strong>Batch Indexing</strong></p>
+
+  <pre><code>for file in *_deduplicated.bam; do
+  samtools index "$file"
+done</code></pre>
+
+
+  <h2>Task 5: Estimate Coverage Using Qualimap</h2>
+
+  <p><strong>Install and Activate Qualimap</strong></p>
+
+  <pre><code>conda create -n qualimap -c bioconda qualimap
+conda activate qualimap</code></pre>
+
+
+  <p><strong>Run on a Single File</strong></p>
+
+  <pre><code>qualimap bamqc \
+  -bam SRR836370_deduplicated.bam \
+  -outdir SRR836370_qualimap_results \
+  -outformat HTML</code></pre>
+
+
+  <p><strong>Run on All Files</strong></p>
+
+  <pre><code>for file in *_deduplicated.bam; do
+  sample_name=${file%_deduplicated.bam}
+
+  qualimap bamqc \
+    -bam "$file" \
+    -outdir "${sample_name}_qualimap_results" \
+    -outformat HTML
+done</code></pre>
+
+
+  <p><strong>Check Output</strong></p>
+
+  <pre><code>cd SRR836370_qualimap_results
+cat genome_results.txt</code></pre>
+
+
+  <h2>Extra Note</h2>
+
+  <p>
+    The reference genome, FASTQ files, metadata, and variant files are
+    available from the Wildlife Genomics 4 Zenodo dataset.
+  </p>
+
+  <p>
+    <strong>Zenodo dataset:</strong>
+    <a href="https://zenodo.org/records/21871083" target="_blank">
+      https://zenodo.org/records/21871083
+    </a>
+  </p>
+
+</body>
+</html>
+
