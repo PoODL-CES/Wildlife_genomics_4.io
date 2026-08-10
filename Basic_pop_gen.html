@@ -1,0 +1,209 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic Population Genetics Tasks</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      background: #fdfdfd;
+      margin: 40px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    details {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+
+    summary {
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1em;
+    }
+
+    ul {
+      margin-left: 20px;
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 5px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Variant Analysis Task List</h1>
+
+
+<details>
+  <summary>Task 1: VCF to PLINK Format Conversion</summary>
+
+  <ul>
+    <li>
+      Convert the filtered VCF to PLINK binary format using
+      <code>plink --make-bed</code>.
+    </li>
+
+    <li>
+      Edit the <code>.fam</code> file to add region/population information
+      to the second column.
+    </li>
+
+    <li>
+      Edit the <code>.bim</code> file and replace the chromosome name
+      <code>E2</code> with <code>1</code>.
+    </li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>Task 2: Principal Component Analysis (PCA)</summary>
+
+  <ul>
+    <li>
+      Run PCA using <code>plink --pca 5</code>.
+    </li>
+
+    <li>
+      Visualize the first two principal components in R using
+      <code>ggplot2</code>.
+    </li>
+
+    <li>
+      Label samples according to their population/region.
+    </li>
+
+    <li>
+      Save the PCA plot as both <code>.png</code> and <code>.pdf</code>.
+    </li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>Task 3: File Transfer</summary>
+
+  <ul>
+    <li>
+      Use <code>scp</code> to copy output files from the server
+      to your local machine.
+    </li>
+
+    <li>
+      Example:
+      <code>scp user@IP:path/to/Rplots.pdf .</code>
+    </li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>Task 4: ADMIXTURE Analysis</summary>
+
+  <ul>
+    <li>
+      Create a Conda environment and install ADMIXTURE.
+    </li>
+
+    <li>
+      Run ADMIXTURE for <code>K = 2</code> to <code>K = 4</code>.
+    </li>
+
+    <li>
+      Use a loop to run multiple K values.
+    </li>
+
+    <li>
+      Generate the corresponding <code>.K.P</code> and
+      <code>.K.Q</code> output files.
+    </li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>Task 5: ADMIXTURE Plotting</summary>
+
+  <ul>
+    <li>
+      Read the ADMIXTURE <code>.Q</code> file and PLINK
+      <code>.fam</code> file into R.
+    </li>
+
+    <li>
+      Extract the population/region information from the sample IDs
+      or <code>.fam</code> file.
+    </li>
+
+    <li>
+      Reshape the ADMIXTURE output for plotting.
+    </li>
+
+    <li>
+      Generate an ADMIXTURE barplot using <code>ggplot2</code>.
+    </li>
+
+    <li>
+      Save the plot as
+      <code>admixture_K3_grouped.png</code>.
+    </li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>Task 6: Heterozygosity Estimation</summary>
+
+  <ul>
+    <li>
+      Install <code>rtg-tools</code> using Conda.
+    </li>
+
+    <li>
+      Run <code>rtg vcfstats</code> on the final filtered VCF.
+    </li>
+
+    <li>
+      Save the output as a <code>.vcfstats</code> file.
+    </li>
+  </ul>
+</details>
+
+
+<details>
+  <summary>Task 7: Optional / Miscellaneous Tasks</summary>
+
+  <ul>
+    <li>
+      Activate and deactivate Conda environments as required.
+    </li>
+
+    <li>
+      Keep track of intermediate and final output files.
+    </li>
+
+    <li>
+      Exit the server after completing the analysis using
+      <code>exit</code>.
+    </li>
+  </ul>
+</details>
+
+
+</body>
+</html>
+```
