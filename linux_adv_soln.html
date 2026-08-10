@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pwani Wildlife Genomics 4 Workshop</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 40px;
+      background-color: #fdfdfd;
+      color: #333;
+    }
+
+    code, pre {
+      background-color: #f4f4f4;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: block;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    h2, h3, h4 {
+      color: #006699;
+    }
+
+    a {
+      color: #0077cc;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>FASTQ Quality Control Tutorial</h2>
+
+<h3>Download the datasets</h3>
+
+<p>
+  Datasets can be downloaded from:
+  <a href="https://zenodo.org/records/21871083">
+    https://zenodo.org/records/21871083
+  </a>
+</p>
+
+
+<h3>Structure of FASTQ files</h3>
+
+<p>
+FASTQ files are the output from sequencing platforms (like Illumina) and typically consist of four lines per read:
+</p>
+
+<pre><code>@SRR15369215.126490887         # Sequence identifier
+GGACCTTCTGTCA...              # Nucleotide sequence
++                             # Separator
+AAFFFJJJJJJJJ...              # Base call quality scores
+</code></pre>
+
+
+<!--
+<p>
+After 100-150 base pairs, the accuracy of base calling decreases.
+Trimming is usually done to retain only high-quality bases.
+</p>
+
+<h3>Renaming downloaded .gz files</h3>
+
+<pre><code>for file in *\?download=1; do
+    newname=$(echo "$file" | sed "s/?download=1//")
+    mv "$file" "$newname"
+done
+</code></pre>
+-->
+
+
+<h3>1. Count number of reads</h3>
+
+<pre><code>less fastq_data/SRR836370_SAfr.fastq.gz | grep '^@' | wc -l</code></pre>
+
+<pre><code>echo $(( $(zcat fastq_data/SRR836370_SAfr.fastq.gz | wc -l) / 4 ))</code></pre>
+
+<pre><code>less fastq_data/SRR836370_SAfr.fastq.gz | wc -l | awk '{print $1 / 4}'</code></pre>
+
+
+<p>For all files:</p>
+
+<pre><code>
+# Strategy 1: count the total number of lines and divide by 4 since all FASTQ reads
+# are represented by 4 lines as explained
+
+for file in fastq_data/*.fq.gz; do
+  read_count=$(( $(zcat "$file" | wc -l) / 4 ))
+  echo "$(basename "$file"): $read_count reads"
+done
+
+# Strategy 2: count the number of lines with +
+# since all FASTQ reads have exactly one line containing only a single +
+
+less fastq_data/SRR836370_SAfr.fastq.gz | grep "^+$" | wc -l
+</code></pre>
+
+
+<h3>2. Reads shorter than 100 bp</h3>
+
+<pre><code>zcat fastq_data/SRR836370_SAfr.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l</code></pre>
+
+<p>For all files:</p>
+
+<pre><code>for file in fastq_data/*.fq.gz; do
+   reads=$(zcat "$file" | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l)
+   echo "$(basename "$file"): $reads reads shorter than 100bp"
+done
+</code></pre>
+
+
+<h3>3. Reads longer than 100 bp</h3>
+
+<pre><code>zcat fastq_data/SRR836370_SAfr.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l</code></pre>
+
+<p>For all files:</p>
+
+<pre><code>for file in fastq_data/*.fq.gz; do
+   reads=$(zcat "$file" | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l)
+   echo "$(basename "$file"): $reads reads longer than 100bp"
+done
+</code></pre>
+
+
+<h3>4. Reads not equal to 100 bp</h3>
+
+<pre><code>zcat fastq_data/SRR836370_SAfr.fastq.gz | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l</code></pre>
+
+<p>For all files:</p>
+
+<pre><code>for file in fastq_data/*.fq.gz; do
+  count=$(zcat "$file" | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l)
+  echo "$(basename "$file"): $count reads not equal to 100bp"
+done
+</code></pre>
+
+
+<h3>5. Reads contaminated with Illumina adapters</h3>
+
+<pre><code>zcat fastq_data/SRR836370_SAfr.fastq.gz | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT'
+
+# Note that this command looks for a complete match to the adapter sequence.
+# Most reads will only have a partial length of the adapter sequence.
+</code></pre>
+
+<p>For all files:</p>
+
+<pre><code>for file in fastq_data/*.fq.gz; do
+  count=$(zcat "$file" | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT')
+  echo "$file: $count"
+done
+</code></pre>
+
+<p>Expected: All files should report 0 contamination.</p>
+
+
+</body>
+</html>
+
