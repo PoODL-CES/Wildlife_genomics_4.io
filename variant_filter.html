@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>VCF Filtering and PCA Workflow</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    code, pre {
+      background-color: #eee;
+      padding: 10px;
+      display: block;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border-left: 5px solid #ccc;
+    }
+
+    h2, h3 {
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>VCF Filtering and PCA Workflow</h2>
+
+  <p>Create a symbolic link to the variants file:</p>
+
+  <pre><code>ln -s /data/PwaniGenomics/variants.vcf.gz</code></pre>
+
+  <p>
+    The variants file can also be downloaded from the
+    <a href="https://zenodo.org/records/21871083" target="_blank">
+      Wildlife Genomics 4 Zenodo dataset
+    </a>.
+  </p>
+
+
+  <h3>1. Apply Base Quality, Genotype Quality, INDELS, and "PASS" Filters</h3>
+
+  <p>
+    Apply quality-based filters to retain high-confidence variants.
+    Remove all variants with Q &lt; 30, GQ &lt; 30, remove all INDELs,
+    and retain only variants that are flagged as "PASS".
+  </p>
+
+
+  <h3>2. Remove Non-neutral Loci</h3>
+
+  <p>
+    Remove any variant that deviates from HWE with a chi-square
+    P value of less than 0.01.
+  </p>
+
+
+  <h3>3. Remove Alleles That Appear Less Than 3 Times</h3>
+
+  <p>
+    Extremely rare alleles can sometimes be sequencing artefacts.
+    For example, an allele that appears only once or twice in the
+    dataset could be caused by a sequencing error. Removing alleles
+    that occur fewer than 3 times helps reduce the influence of
+    extremely rare variants.
+  </p>
+
+
+  <h3>4. Apply Individual Missingness Filter</h3>
+
+  <p>
+    Remove individuals with more than 98% missing data.
+  </p>
+
+
+  <h3>5. Record Variant Counts for Different Site Missingness Thresholds</h3>
+
+  <p>
+    Extract and save the number of variants remaining at each
+    missingness threshold from 0.1 to 0.9.
+  </p>
+
+
+  <h3>6. Apply Site Missingness Filter</h3>
+
+  <p>
+    Filter out variants that are not commonly genotyped across
+    individuals.
+  </p>
+
+
+  <h3>7. Plot <code>variant_counts.txt</code> Using ggplot2 in R</h3>
+
+
+  <h3>8. Apply Final Missingness Filter (Max Missing = 0.5)</h3>
+
+  <p>
+    This retains variants that are present in at least 50% of
+    individuals.
+  </p>
+
+
+  <h3>9. Extract Depth Values Between 2.5th and 97.5th Percentiles</h3>
+
+  <p>
+    Use R or Python to compute the 0.025 and 0.975 quantiles
+    and filter sites accordingly.
+  </p>
+
+
+  <h3>10. Use Site Mean Depth Filter</h3>
+
+  <p>
+    Calculate the mean depth per variant.
+  </p>
+
+
+  <h3>11. Apply Depth Filters to Retain Only Mid 95% Variants</h3>
+
+
+  <h3>12. Perform PCA</h3>
+
+  <p>
+    Convert the filtered VCF file to PLINK format and perform PCA.
+  </p>
+
+
+  <h3>Extra Note</h3>
+
+  <p>
+    The Wildlife Genomics 4 dataset contains the pre-generated
+    variants file used for this exercise.
+  </p>
+
+  <p>
+    <strong>Variants file:</strong>
+    <code>variants.vcf.gz</code>
+  </p>
+
+  <p>
+    <strong>Zenodo dataset:</strong>
+    <a href="https://zenodo.org/records/21871083" target="_blank">
+      https://zenodo.org/records/21871083
+    </a>
+  </p>
+
+</body>
+</html>
+
