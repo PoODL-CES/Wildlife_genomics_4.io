@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Variant Calling using Strelka</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 40px;
+      background-color: #f9f9f9;
+    }
+
+    code, pre {
+      background-color: #eee;
+      padding: 10px;
+      display: block;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      border-left: 5px solid #ccc;
+    }
+
+    h2, h3 {
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Variant Calling using Strelka</h2>
+
+
+  <h3>1. Install and Activate Strelka</h3>
+
+  <pre><code>conda create -n strelka -c bioconda strelka
+conda activate strelka</code></pre>
+
+  <p>
+    This creates a new Conda environment named <code>strelka</code>
+    and installs Strelka2 from the Bioconda channel.
+  </p>
+
+
+  <h3>2. Index the Reference Genome</h3>
+
+  <pre><code>samtools faidx GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna</code></pre>
+
+  <p>
+    <code>faidx</code> stands for FASTA indexing. Skip this step if the
+    <code>.fai</code> index file already exists.
+  </p>
+
+
+  <h3>3. Run Strelka (Two-Step Process)</h3>
+
+
+  <h4>Step 1: Configuration</h4>
+
+  <p>Check if Strelka is installed properly:</p>
+
+  <pre><code>which configureStrelkaGermlineWorkflow.py</code></pre>
+
+
+  <p>Configure the workflow for a single sample:</p>
+
+  <pre><code>configureStrelkaGermlineWorkflow.py \
+  --bam SRR836370_deduplicated.bam \
+  --referenceFasta GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna \
+  --runDir SRR836370_strelka_germline</code></pre>
+
+
+  <p>
+    <strong>Explanation:</strong><br>
+    <code>configureStrelkaGermlineWorkflow.py</code> prepares the pipeline
+    and generates the necessary files.<br>
+
+    <code>--bam</code> specifies the input BAM file.<br>
+
+    <code>--referenceFasta</code> provides the reference genome.<br>
+
+    <code>--runDir</code> specifies the output directory for the configured workflow.
+  </p>
+
+
+  <h4>Step 2: Workflow Execution</h4>
+
+  <pre><code>SRR836370_strelka_germline/runWorkflow.py -m local -j 8</code></pre>
+
+  <p>
+    This runs the variant calling process using the previously configured workflow.<br>
+
+    <code>-m local</code> runs the workflow on the local machine.<br>
+
+    <code>-j 8</code> uses 8 CPU threads for parallel execution.
+  </p>
+
+
+  <h3>4. Variant Calling for Multiple Samples</h3>
+
+  <p>
+    Strelka can also be configured using multiple BAM files.
+  </p>
+
+  <pre><code>configureStrelkaGermlineWorkflow.py \
+  --bam SRR836370_deduplicated.bam \
+  --bam SRR836361_deduplicated.bam \
+  --bam SRR11286181_deduplicated.bam \
+  --referenceFasta GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna \
+  --runDir multi_sample_strelka</code></pre>
+
+
+  <p>Then run the workflow:</p>
+
+  <pre><code>multi_sample_strelka/runWorkflow.py -m local -j 8</code></pre>
+
+
+  <p>
+    <strong>Note:</strong>
+    The output directory will contain the variant calling results generated
+    by Strelka.
+  </p>
+
+
+  <h3>Extra Note</h3>
+
+  <p>
+    The reference genome and other workshop datasets are available from
+    the Wildlife Genomics 4 Zenodo record.
+  </p>
+
+  <p>
+    <strong>Zenodo dataset:</strong>
+    <a href="https://zenodo.org/records/21871083" target="_blank">
+      https://zenodo.org/records/21871083
+    </a>
+  </p>
+
+</body>
+</html>
+
