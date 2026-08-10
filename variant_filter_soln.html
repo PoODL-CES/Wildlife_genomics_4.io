@@ -1,0 +1,219 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Variant Filtering Workflow</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2em;
+      line-height: 1.6;
+      background-color: #f9f9f9;
+    }
+
+    h2, h3, h4 {
+      color: #2c3e50;
+    }
+
+    pre {
+      background-color: #eef;
+      padding: 1em;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Variant Filtering</h2>
+
+
+  <h3>Download VCF</h3>
+
+  <p>
+    The VCF file is available from the
+    <a href="https://zenodo.org/records/21871083" target="_blank">
+      Wildlife Genomics 4 Zenodo dataset
+    </a>.
+  </p>
+
+  <p>
+    <strong>Input file:</strong>
+    <code>variants.vcf.gz</code>
+  </p>
+
+
+  <h3>Tool: VCFtools</h3>
+
+  <p>Install VCFtools in a new Conda environment:</p>
+
+  <pre><code>conda create -n vcftools -c bioconda vcftools
+conda activate vcftools</code></pre>
+
+
+  <h3>Apply Filters</h3>
+
+
+  <h4>1. Base Quality and Genotype Quality Filters</h4>
+
+  <pre><code>vcftools --gzvcf variants.vcf.gz \
+--minQ 30 --minGQ 30 \
+--out variants_minQ30_minGQ30 --recode</code></pre>
+
+
+  <h4>2. Remove INDELs</h4>
+
+  <pre><code>vcftools --vcf variants_minQ30_minGQ30.recode.vcf \
+--remove-indels \
+--out variants_minQ30_minGQ30_rmvIndels --recode</code></pre>
+
+
+  <h4>3. Hardy-Weinberg Equilibrium (HWE) Filter</h4>
+
+  <pre><code>vcftools --vcf variants_minQ30_minGQ30_rmvIndels.recode.vcf \
+--hwe 0.05 \
+--out variants_minQ30_minGQ30_rmvIndels_hwe_0.05 --recode</code></pre>
+
+
+  <h4>4. Minor Allele Count (MAC &ge; 3)</h4>
+
+  <pre><code>vcftools --vcf variants_minQ30_minGQ30_rmvIndels_hwe_0.05.recode.vcf \
+--mac 3 \
+--out variants_minQ30_minGQ30_rmvIndels_hwe_0.05_mac3 --recode</code></pre>
+
+
+  <h4>5. Individual Missingness Filter (&gt;98% missing)</h4>
+
+  <p>First calculate individual missingness:</p>
+
+  <pre><code>vcftools --vcf variants_minQ30_minGQ30_rmvIndels_hwe_0.05_mac3.recode.vcf \
+--missing-indv \
+--out imiss_stats</code></pre>
+
+  <p>
+    Remove individuals with more than 98% missing data:
+  </p>
+
+  <pre><code>vcftools --vcf variants_minQ30_minGQ30_rmvIndels_hwe_0.05_mac3.recode.vcf \
+--remove &lt;(awk '$5 &gt; 0.98 {print $1}' imiss_stats.imiss) \
+--recode \
+--out variants_minQ30_minGQ30_rmvIndels_hwe_0.05_mac3_imiss_0.98</code></pre>
+
+
+  <h4>6. Apply Site Missingness Filters (0.1 to 0.9)</h4>
+
+  <pre><code>for miss in {10..90..10}; do
+  perc=$(echo "scale=2; $miss / 100" | bc)
+
+  vcftools \
+    --vcf variants_minQ30_minGQ30_rmvIndels_hwe_0.05_mac3_imiss_0.98.recode.vcf \
+    --max-missing $perc \
+    --out variants_miss_${miss} \
+    --recode
+done</code></pre>
+
+
+  <h4>7. Count Variants for Each Missingness Threshold</h4>
+
+  <pre><code>for miss in {10..90..10}; do
+  count=$(grep -vc "^#" variants_miss_${miss}.recode.vcf)
+  echo "${miss} ${count}" >> variant_counts.txt
+done</code></pre>
+
+
+  <h3>Plot Variant Counts Using ggplot2</h3>
+
+  <h4>Install ggplot2</h4>
+
+  <pre><code>conda create -n ggplot2 -c conda-forge r-ggplot2
+conda activate ggplot2</code></pre>
+
+
+  <h4>Plotting Command</h4>
+
+  <pre><code>R -e "library(ggplot2); library(scales);
+data &lt;- read.table('variant_counts.txt',
+header=FALSE,
+col.names=c('Missingness', 'Variants'));
+
+p &lt;- ggplot(data, aes(x=Missingness, y=Variants)) +
+geom_line(color='blue') +
+geom_point(color='red') +
+ggtitle('Number of Passed Variants vs. Missingness Filter') +
+xlab('Max Missingness (%)') +
+ylab('Number of Variants') +
+scale_y_continuous(labels = comma) +
+scale_x_continuous(limits = c(10, 90)) +
+theme_minimal();
+
+ggsave('variant_plot.png', plot=p)"</code></pre>
+
+
+  <h3>Apply Mean Depth Filter</h3>
+
+
+  <h4>Calculate Mean Depth</h4>
+
+  <pre><code>vcftools \
+--vcf variants_miss_60.recode.vcf \
+--site-mean-depth \
+--out depth</code></pre>
+
+
+  <h4>Get 95% Depth Range in R</h4>
+
+  <pre><code>conda create -n R_env -c conda-forge r-base
+conda activate R_env
+
+R</code></pre>
+
+  <pre><code>depth_data &lt;- read.table("depth.ldepth.mean", header = TRUE)
+
+depths &lt;- depth_data$MEAN_DEPTH
+
+lower_bound &lt;- quantile(depths, 0.025, na.rm = TRUE)
+upper_bound &lt;- quantile(depths, 0.975, na.rm = TRUE)
+
+cat("Middle 95% range:", lower_bound, "to", upper_bound, "\n")</code></pre>
+
+
+  <p>
+    <strong>Example output:</strong>
+    <code>Middle 95% range: 12.8302 to 24.6604</code>
+  </p>
+
+
+  <h4>Apply Depth Filter</h4>
+
+  <pre><code>vcftools --vcf variants_miss_60.recode.vcf \
+--min-meanDP 12.8302 \
+--max-meanDP 24.6604 \
+--recode \
+--out variants_miss_60_mid95percentile</code></pre>
+
+
+  <h3>Extra Note</h3>
+
+  <p>
+    The pre-generated variant file used for this exercise is
+    <code>variants.vcf.gz</code>.
+  </p>
+
+  <p>
+    <strong>Wildlife Genomics 4 Zenodo dataset:</strong>
+    <a href="https://zenodo.org/records/21871083" target="_blank">
+      https://zenodo.org/records/21871083
+    </a>
+  </p>
+
+</body>
+</html>
+```
