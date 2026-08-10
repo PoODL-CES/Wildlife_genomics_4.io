@@ -1,0 +1,134 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Pwani Wildlife Genomics 4 Workshop</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      line-height: 1.6;
+    }
+
+    pre {
+      background-color: #f0f0f0;
+      padding: 1em;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    h2 {
+      color: #2e6c80;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>🧬 Advanced linux tutorial</h1>
+
+  <h2>The dataset for this exercise is available at</h2>
+
+  <code>
+    <pre>/data/PwaniGenomics/fastq_data</pre>
+  </code>
+
+  <code>
+    <pre>#create symbolic link to the data in your user directory</pre>
+  </code>
+
+  <code>
+    <pre>ln -s /data/PwaniGenomics/fastq_data</pre>
+  </code>
+
+  <p><strong>Note:</strong> FASTQ reads are in <code>.gz</code> format.</p>
+
+
+  <h2>Genome File Descriptions (.fna Indexes)</h2>
+
+  <ul>
+    <li><code>fna.amb</code> – Contains info on ambiguous bases (e.g., N).</li>
+    <li><code>fna.ann</code> – Contains metadata such as sequence names and lengths.</li>
+    <li><code>fna.bwt</code> – Burrows-Wheeler transformed sequence (compressed format).</li>
+    <li><code>fna.pac</code> – Packed sequence data.</li>
+    <li><code>fna.sa</code> – Suffix array used to locate sequences.</li>
+  </ul>
+
+
+  <h2>Structure of a FASTQ File</h2>
+
+  <p>
+    FASTQ files (typically <code>.fastq.gz</code>) contain sequencing reads.
+    Each read consists of four lines:
+  </p>
+
+  <pre><code class="language-bash">
+@SRR15369215.126490887       # Sequence identifier
+GGACCTTCTGTCATTTCACT...      # Nucleotide sequence
++                             # Separator
+AAFFFJJJJJJJJJJJJJJJJ...      # Base quality scores
+  </code></pre>
+
+
+  <h2>Read Length Analysis</h2>
+
+  <h3>
+    Count Total Reads for
+    <code>SRR836370_SAfr</code> and
+    <code>SRR836361_CAfr</code>:
+  </h3>
+
+
+  <h3>
+    Reads Shorter than 100bp for
+    <code>SRR836370_SAfr</code> and
+    <code>SRR836361_CAfr</code>:
+  </h3>
+
+
+  <h3>
+    Reads Longer than 100bp for
+    <code>SRR836370_SAfr</code> and
+    <code>SRR836361_CAfr</code>:
+  </h3>
+
+
+  <h3>
+    Reads Not Equal to 100bp for
+    <code>SRR836370_SAfr</code> and
+    <code>SRR836361_CAfr</code>:
+  </h3>
+
+
+  <h3>
+    Reads Contaminated with Illumina Adapter for
+    <code>SRR836370_SAfr</code> and
+    <code>SRR836361_CAfr</code>:
+  </h3>
+
+  <p>
+    Adapter sequence: <code>CTGTCTCTTATACACATCT</code>
+  </p>
+
+
+  <h1>Extra note</h1>
+
+  <h2>The Datasets can be accessed later too</h2>
+
+  <p>
+    Datasets are available at:
+    <a href="https://zenodo.org/records/21871083">
+      https://zenodo.org/records/21871083
+    </a>
+  </p>
+
+</body>
+</html>
+```
