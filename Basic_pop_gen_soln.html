@@ -1,0 +1,127 @@
+
+<h3>Run PCA</h3>
+
+<pre><code>plink --bfile variants --pca 5 --allow-extra-chr --out variants_pca</code></pre>
+
+<p>Deactivate the PLINK environment:</p>
+
+<pre><code>conda deactivate</code></pre>
+
+
+<h3>Plot PCA in R</h3>
+
+<pre><code>conda activate R_env</code></pre>
+
+<p>Start R:</p>
+
+<pre><code>R</code></pre>
+
+<pre><code>library(ggplot2)
+
+fam <- read.table("variants.fam")
+
+eigenvec <- read.table("variants_pca.eigenvec")
+
+colnames(eigenvec) <- c("FID", "IID", paste0("PC", 1:5))
+
+# Add population/region information from the .fam file
+eigenvec$Region <- fam$V2
+
+ggplot(eigenvec, aes(x = PC1, y = PC2, color = Region)) +
+  geom_point(size = 3, alpha = 0.8) +
+  theme_minimal() +
+  labs(
+    title = "PCA Plot",
+    x = "PC1",
+    y = "PC2"
+  )
+
+ggsave("pca_plot.png")
+ggsave("pca_plot.pdf")
+
+q()</code></pre>
+
+
+<h3>Run ADMIXTURE</h3>
+
+<p>Run ADMIXTURE for K = 2 to K = 4:</p>
+
+<pre><code>for K in {2..4}
+do
+  admixture variants.bed $K
+done</code></pre>
+
+
+<h3>Plot ADMIXTURE Results in R</h3>
+
+<pre><code>conda activate R_env</code></pre>
+
+<p>Start R:</p>
+
+<pre><code>R</code></pre>
+
+<pre><code>library(ggplot2)
+library(reshape2)
+library(dplyr)
+
+q3 <- read.table("variants.3.Q")
+
+fam <- read.table("variants.fam")
+
+# Add sample IDs and population/region information
+q3$ID <- fam$V1
+q3$Group <- fam$V2
+
+# Reshape ADMIXTURE output
+q3_long <- melt(
+  q3,
+  id.vars = c("ID", "Group")
+)
+
+# Arrange samples by group
+q3_long <- q3_long %>%
+  arrange(Group, ID) %>%
+  mutate(ID = factor(ID, levels = unique(ID)))
+
+# Plot ADMIXTURE proportions
+p <- ggplot(
+  q3_long,
+  aes(x = ID, y = value, fill = variable)
+) +
+  geom_bar(
+    stat = "identity",
+    width = 1
+  ) +
+  facet_grid(
+    ~Group,
+    scales = "free_x",
+    space = "free_x"
+  ) +
+  theme_minimal() +
+  labs(
+    x = "Individuals",
+    y = "Ancestry Proportion",
+    title = "ADMIXTURE Plot (K=3)"
+  ) +
+  theme(
+    axis.text.x = element_blank(),
+    axis.ticks.x = element_blank(),
+    panel.spacing = unit(0.5, "lines"),
+    strip.text.x = element_text(
+      angle = 0,
+      face = "bold"
+    ),
+    legend.position = "right"
+  ) +
+  scale_fill_brewer(palette = "Set1")
+
+ggsave(
+  "admixture_K3.png",
+  p,
+  width = 12,
+  height = 6,
+  dpi = 300
+)
+
+q()</code></pre>
+
