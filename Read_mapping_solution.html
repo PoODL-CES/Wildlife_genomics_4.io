@@ -1,5 +1,5 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -27,10 +27,10 @@
       color: #333;
     }
   </style>
+
 </head>
 
 <body>
-
 
   <h2>Task 1: Map Trimmed Reads Using BWA MEM</h2>
 
@@ -39,32 +39,28 @@
   <pre><code>conda create -n bwa -c bioconda bwa
 conda activate bwa</code></pre>
 
-
   <p><strong>Map Reads</strong></p>
 
   <pre><code>bwa mem GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna \
-SRR836370_1.fastq.gz \
-SRR836370_2.fastq.gz \
-> SRR836370_aligned_reads.sam</code></pre>
-
+sub_samples2/SRR836370_1_subset_val_1.fq.gz \
+sub_samples2/SRR836370_2_subset_val_2.fq.gz \
+&gt; SRR836370_aligned_reads.sam</code></pre>
 
   <p><strong>Loop for All Samples</strong></p>
 
-  <pre><code>for file1 in *_1.fastq.gz; do
-  file2=${file1/_1.fastq.gz/_2.fastq.gz}
-  sample_name=$(basename "$file1" _1.fastq.gz)
+  <pre><code>for file1 in sub_samples2/*_val_1.fq.gz; do
+  file2=${file1/_val_1.fq.gz/_val_2.fq.gz}
+  sample_name=$(basename "$file1" _val_1.fq.gz)
 
   bwa mem GCF_018350215.1_P.leo_Ple1_pat1.1_genomic.fna \
     "$file1" \
     "$file2" \
-    > "${sample_name}_aligned_reads.sam"
+    &gt; "${sample_name}_aligned_reads.sam"
 done</code></pre>
-
 
   <p><strong>Deactivate BWA Environment</strong></p>
 
   <pre><code>conda deactivate</code></pre>
-
 
   <h2>Task 2: Convert SAM to BAM and Sort</h2>
 
@@ -73,12 +69,10 @@ done</code></pre>
   <pre><code>conda create -n samtools -c bioconda samtools
 conda activate samtools</code></pre>
 
-
   <p><strong>Convert and Sort</strong></p>
 
   <pre><code>samtools sort SRR836370_aligned_reads.sam \
 -o SRR836370_sorted.bam</code></pre>
-
 
   <p><strong>Batch Conversion and Sorting</strong></p>
 
@@ -87,11 +81,9 @@ conda activate samtools</code></pre>
   samtools sort "$file" -o "${sample_name}_sorted.bam"
 done</code></pre>
 
-
   <p><strong>Deactivate Samtools Environment</strong></p>
 
   <pre><code>conda deactivate</code></pre>
-
 
   <h2>Task 3: Mark Duplicates Using GATK4</h2>
 
@@ -99,7 +91,6 @@ done</code></pre>
 
   <pre><code>conda create -n gatk4 -c bioconda gatk4
 conda activate gatk4</code></pre>
-
 
   <p><strong>Add Read Groups</strong></p>
 
@@ -115,7 +106,6 @@ do
     RGLB="${file/_sorted.bam/}"
 done</code></pre>
 
-
   <p><strong>Mark Duplicates</strong></p>
 
   <pre><code>gatk MarkDuplicates \
@@ -123,7 +113,6 @@ done</code></pre>
   -O SRR836370_deduplicated.bam \
   -M SRR836370_duplication_metrics.txt \
   --REMOVE_DUPLICATES true</code></pre>
-
 
   <p><strong>Loop Version</strong></p>
 
@@ -137,20 +126,17 @@ done</code></pre>
     --REMOVE_DUPLICATES true
 done</code></pre>
 
-
   <h2>Task 4: Index Deduplicated Files</h2>
 
   <p><strong>Index a single BAM file</strong></p>
 
   <pre><code>samtools index SRR836370_deduplicated.bam</code></pre>
 
-
   <p><strong>Batch Indexing</strong></p>
 
   <pre><code>for file in *_deduplicated.bam; do
   samtools index "$file"
 done</code></pre>
-
 
   <h2>Task 5: Estimate Coverage Using Qualimap</h2>
 
@@ -159,14 +145,12 @@ done</code></pre>
   <pre><code>conda create -n qualimap -c bioconda qualimap
 conda activate qualimap</code></pre>
 
-
   <p><strong>Run on a Single File</strong></p>
 
   <pre><code>qualimap bamqc \
   -bam SRR836370_deduplicated.bam \
   -outdir SRR836370_qualimap_results \
   -outformat HTML</code></pre>
-
 
   <p><strong>Run on All Files</strong></p>
 
@@ -179,12 +163,10 @@ conda activate qualimap</code></pre>
     -outformat HTML
 done</code></pre>
 
-
   <p><strong>Check Output</strong></p>
 
   <pre><code>cd SRR836370_qualimap_results
 cat genome_results.txt</code></pre>
-
 
   <h2>Extra Note</h2>
 
@@ -202,4 +184,3 @@ cat genome_results.txt</code></pre>
 
 </body>
 </html>
-
