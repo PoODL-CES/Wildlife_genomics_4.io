@@ -42,7 +42,7 @@
 
 <p>
   Datasets can be downloaded from:
-  <a href="https://zenodo.org/records/21871083">
+  <a href="https://zenodo.org/records/21871083" target="_blank">
     https://zenodo.org/records/21871083
   </a>
 </p>
@@ -51,7 +51,8 @@
 <h3>Structure of FASTQ files</h3>
 
 <p>
-FASTQ files are the output from sequencing platforms (like Illumina) and typically consist of four lines per read:
+FASTQ files are the output from sequencing platforms (like Illumina)
+and typically consist of four lines per read:
 </p>
 
 <pre><code>@SRR15369215.126490887         # Sequence identifier
@@ -79,83 +80,82 @@ done
 
 <h3>1. Count number of reads</h3>
 
-<p>For <code>SRR836370</code>:</p>
+<p>For <code>SRR10764405_1_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836370.fastq.gz | wc -l | awk '{print $1 / 4}'</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_1_subset.fastq.gz | wc -l | awk '{print $1 / 4}'</code></pre>
 
-<p>For <code>SRR836361</code>:</p>
+<p>For <code>SRR10764405_2_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836361.fastq.gz | wc -l | awk '{print $1 / 4}'</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_2_subset.fastq.gz | wc -l | awk '{print $1 / 4}'</code></pre>
 
-<p>For all files:</p>
+<p>For all FASTQ files:</p>
 
-<pre><code>
-# Strategy 1: count the total number of lines and divide by 4 since all FASTQ reads
-# are represented by 4 lines as explained
+<pre><code># Strategy 1: count the total number of lines and divide by 4
+# since all FASTQ reads are represented by 4 lines
 
-for file in fastq_data/*.fastq.gz; do
+for file in sub_samples2/*.fastq.gz; do
   read_count=$(( $(zcat "$file" | wc -l) / 4 ))
   echo "$(basename "$file"): $read_count reads"
 done
 
 # Strategy 2: count the number of lines with +
-# since all FASTQ reads have exactly one line containing only a single +
+# since every FASTQ read has one line containing only +
 
-zcat fastq_data/SRR836370.fastq.gz | grep "^+$" | wc -l
+zcat sub_samples2/SRR10764405_1_subset.fastq.gz | grep "^+$" | wc -l
 </code></pre>
 
 
 <h3>2. Reads shorter than 100 bp</h3>
 
-<p>For <code>SRR836370</code>:</p>
+<p>For <code>SRR10764405_1_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836370.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_1_subset.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l</code></pre>
 
-<p>For <code>SRR836361</code>:</p>
+<p>For <code>SRR10764405_2_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836361.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_2_subset.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l</code></pre>
 
 <p>For all files:</p>
 
-<pre><code>for file in fastq_data/*.fastq.gz; do
-   reads=$(zcat "$file" | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l)
-   echo "$(basename "$file"): $reads reads shorter than 100bp"
+<pre><code>for file in sub_samples2/*.fastq.gz; do
+  reads=$(zcat "$file" | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&lt;100' | wc -l)
+  echo "$(basename "$file"): $reads reads shorter than 100bp"
 done
 </code></pre>
 
 
 <h3>3. Reads longer than 100 bp</h3>
 
-<p>For <code>SRR836370</code>:</p>
+<p>For <code>SRR10764405_1_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836370.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_1_subset.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l</code></pre>
 
-<p>For <code>SRR836361</code>:</p>
+<p>For <code>SRR10764405_2_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836361.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_2_subset.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l</code></pre>
 
 <p>For all files:</p>
 
-<pre><code>for file in fastq_data/*.fastq.gz; do
-   reads=$(zcat "$file" | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l)
-   echo "$(basename "$file"): $reads reads longer than 100bp"
+<pre><code>for file in sub_samples2/*.fastq.gz; do
+  reads=$(zcat "$file" | awk 'NR % 4 == 2 {print length($0)}' | awk '$1&gt;100' | wc -l)
+  echo "$(basename "$file"): $reads reads longer than 100bp"
 done
 </code></pre>
 
 
 <h3>4. Reads not equal to 100 bp</h3>
 
-<p>For <code>SRR836370</code>:</p>
+<p>For <code>SRR10764405_1_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836370.fastq.gz | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_1_subset.fastq.gz | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l</code></pre>
 
-<p>For <code>SRR836361</code>:</p>
+<p>For <code>SRR10764405_2_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836361.fastq.gz | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_2_subset.fastq.gz | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l</code></pre>
 
 <p>For all files:</p>
 
-<pre><code>for file in fastq_data/*.fastq.gz; do
+<pre><code>for file in sub_samples2/*.fastq.gz; do
   count=$(zcat "$file" | awk 'NR % 4 == 2 {if (length($0) != 100) print length($0)}' | wc -l)
   echo "$(basename "$file"): $count reads not equal to 100bp"
 done
@@ -164,28 +164,36 @@ done
 
 <h3>5. Reads contaminated with Illumina adapters</h3>
 
-<p>For <code>SRR836370</code>:</p>
+<p>
+Adapter sequence:
+<code>CTGTCTCTTATACACATCT</code>
+</p>
 
-<pre><code>zcat fastq_data/SRR836370.fastq.gz | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT'
+<p>For <code>SRR10764405_1_subset.fastq.gz</code>:</p>
 
-# Note that this command looks for a complete match to the adapter sequence.
-# Most reads will only have a partial length of the adapter sequence.
-</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_1_subset.fastq.gz | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT'</code></pre>
 
-<p>For <code>SRR836361</code>:</p>
+<p>For <code>SRR10764405_2_subset.fastq.gz</code>:</p>
 
-<pre><code>zcat fastq_data/SRR836361.fastq.gz | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT'
-</code></pre>
+<pre><code>zcat sub_samples2/SRR10764405_2_subset.fastq.gz | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT'</code></pre>
+
+<p>
+Note that these commands look for a complete match to the adapter sequence.
+Most reads will contain only a partial length of the adapter sequence.
+</p>
 
 <p>For all files:</p>
 
-<pre><code>for file in fastq_data/*.fastq.gz; do
+<pre><code>for file in sub_samples2/*.fastq.gz; do
   count=$(zcat "$file" | awk 'NR % 4 == 2' | grep -c 'CTGTCTCTTATACACATCT')
   echo "$file: $count"
 done
 </code></pre>
 
-<p>Expected: All files should report 0 contamination.</p>
+<p>
+Expected: All files should report 0 contamination for complete adapter matches.
+</p>
+
 
 </body>
 </html>
