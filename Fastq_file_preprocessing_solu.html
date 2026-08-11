@@ -1,5 +1,5 @@
-
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -30,6 +30,7 @@
       font-family: monospace;
     }
   </style>
+
 </head>
 
 <body>
@@ -42,7 +43,6 @@
 The raw FASTQ reads sometimes contain adapter sequences and low-quality bases
 at the ends. These need to be removed before downstream analysis.
 </p>
-
 
 <h3>Step 1: Install Conda</h3>
 
@@ -61,7 +61,6 @@ rm ~/miniconda3/miniconda.sh</code></pre>
 
 <pre><code>~/miniconda3/bin/conda init --all</code></pre>
 
-
 <h3>Step 2: Install and Use FastQC</h3>
 
 <p><strong>Install FastQC:</strong></p>
@@ -74,7 +73,7 @@ rm ~/miniconda3/miniconda.sh</code></pre>
 
 <p><strong>Run FastQC on all FASTQ files:</strong></p>
 
-<pre><code>fastqc fastq_data/*.fastq.gz -o .</code></pre>
+<pre><code>fastqc sub_samples2/*.fastq.gz -o .</code></pre>
 
 <p><strong>Organize output files:</strong></p>
 
@@ -91,7 +90,6 @@ scp -r name@IP_address:/path/to/html_files ~/</code></pre>
 
 <pre><code>conda deactivate</code></pre>
 
-
 <h3>Step 3: Trim Reads with Trim Galore</h3>
 
 <p><strong>Install Trim Galore:</strong></p>
@@ -105,44 +103,40 @@ scp -r name@IP_address:/path/to/html_files ~/</code></pre>
 <p><strong>Trim paired-end reads with Illumina adapters:</strong></p>
 
 <pre><code>trim_galore --paired --illumina \
-fastq_data/SRR836370_1.fastq.gz \
-fastq_data/SRR836370_2.fastq.gz</code></pre>
+sub_samples2/SRR10764405_1_subset.fastq.gz \
+sub_samples2/SRR10764405_2_subset.fastq.gz</code></pre>
 
 <p><strong>View trimming report:</strong></p>
 
-<pre><code>less SRR836370_1.fastq.gz_trimming_report.txt</code></pre>
-
+<pre><code>less SRR10764405_1_subset.fastq.gz_trimming_report.txt</code></pre>
 
 <h4>Bulk Trimming Options</h4>
 
 <p><strong>Option 1: List file names manually</strong></p>
 
 <pre><code>for file in \
-fastq_data/SRR836370_1.fastq.gz \
-fastq_data/SRR836361_1.fastq.gz \
-fastq_data/SRR11286181_1.fastq.gz
+sub_samples2/SRR10764405_1_subset.fastq.gz \
+sub_samples2/SRR10764407_1_subset.fastq.gz \
+sub_samples2/SRR10764408_1_subset.fastq.gz
 do
-    paired_file=${file/_1.fastq.gz/_2.fastq.gz}
+    paired_file=${file/_1_subset.fastq.gz/_2_subset.fastq.gz}
     trim_galore --paired "$file" "$paired_file"
 done</code></pre>
 
-
 <p><strong>Option 2: Use wildcard to automatically detect file pairs</strong></p>
 
-<pre><code>for file in fastq_data/*_1.fastq.gz
+<pre><code>for file in sub_samples2/*_1_subset.fastq.gz
 do
-    trim_galore --paired "$file" "${file/_1.fastq.gz/_2.fastq.gz}"
+    trim_galore --paired "$file" "${file/_1_subset.fastq.gz/_2_subset.fastq.gz}"
 done</code></pre>
-
 
 <p><strong>Output Files:</strong></p>
 
 <ul>
-  <li><code>*.fq.gz_trimming_report.txt</code> - Summary report.</li>
-  <li><code>*_val_1.fastq.gz</code> - Trimmed read 1.</li>
-  <li><code>*_val_2.fastq.gz</code> - Trimmed read 2.</li>
+  <li><code>*_subset.fastq.gz_trimming_report.txt</code> - Summary report.</li>
+  <li><code>*_subset_val_1.fastq.gz</code> - Trimmed read 1.</li>
+  <li><code>*_subset_val_2.fastq.gz</code> - Trimmed read 2.</li>
 </ul>
-
 
 <p><strong>Deactivate the Trim Galore environment:</strong></p>
 
@@ -150,4 +144,3 @@ done</code></pre>
 
 </body>
 </html>
-
