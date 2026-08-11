@@ -32,25 +32,20 @@
 
   <h2>Step: Read Mapping and Post-processing</h2>
 
-  <h3>Map trimmed reads using bwa mem</h3>
+ <h3>Map trimmed reads using bwa mem</h3>
 
-  <h4>
-    <p>
-      The raw FASTQ data files are available in
-      <code>sub_samples2</code>
-    </p>
-
+<h4>
+  <p>
+    The raw FASTQ data files are available in
+    <code>sub_samples2</code>.
+    For this analysis, you will require the trimmed reads generated in the previous step.
+  </p>
     <p>
       The reference genome files are available in
       <code>/data/PwaniGenomics/reference</code>
     </p>
 
-    <p>Create a symbolic link to the reference genome:</p>
-  </h4>
-
-  <pre><code>ln -s /data/PwaniGenomics/reference</code></pre>
-
-  <h4>
+  
 
     <p>
       The reads that were trimmed to remove adapters and low-quality bases
